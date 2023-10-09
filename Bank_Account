@@ -1,0 +1,123 @@
+/*This Program will create a class Account with a set of private attributes such as ID, Balance, Annual Interest Rate and the date the account is created,
+ * It will contain setters and getters for each attribute,
+ * deposit and withdraw method and a method to calculate the monthly interest rate on the account when given an annual interest rate.
+ */
+
+//Date and SimpleDateFormat are imported from Java library, in order to be able to get the date the Account was created and format it in the desired pattern.
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+
+public class Account {
+   private int id;
+   private double balance;
+   private double annualInterestRate;
+   private Date dateCreated;
+
+   // Constructor with default values
+   public Account(){
+    id = 0;
+    balance = 0;
+    annualInterestRate = 0;
+    dateCreated = null;
+   }
+   
+   /*Constructor with parameterised values, to assign them when an object is created is Main class.
+   * This will be used to assign the values of ID and balance as per task requirements*/
+   public Account(int id, double balance){
+    this.id = id;
+    this.balance = balance;
+   }
+
+   //Setters and getters method created for each attribute
+   public void setId(int id){
+    this.id = id;
+   }
+   public int getId(){
+    return id;
+   }
+   public void setBalance(double balance){
+    this.balance = balance;
+   }
+   public double getBalance(){
+    return balance;
+   }
+   public void setAnnualInterestRate(double annualInterestRate){
+    this.annualInterestRate = annualInterestRate;
+   }
+   public double getAnnualInterestRate(){
+    return annualInterestRate;
+   }  
+
+   /*Date is retrieved from the system using the Date(System.currentTimeMillis()) method.
+    * This is then formatted to the patter "dd-MM-yyyy" using the SimpleDateFormat class.
+    The final, formatted date is return in String type to be output in the Main class. 
+    */
+   public String getDateCreated(){
+      dateCreated = new Date(System.currentTimeMillis());
+      String pattern = "dd-MM-yyyy";
+      SimpleDateFormat dateFormatted = new SimpleDateFormat(pattern);
+      String date = dateFormatted.format(dateCreated);
+      return date;
+   }
+
+   //Method to calculate and return monthly interest rate on balance.
+   public double getMonthlyInterestRate(){
+   //Annual rate of 4.5% is divided by 12 to get the interest rate for each month
+    double monthlyInterestRate = annualInterestRate/12; 
+    double monthly = ((balance*monthlyInterestRate)/100);
+    return monthly;
+   }
+   //Withdraw method created to subtract value withdrawn from current balance
+   public void withdraw(double x){
+    double y = balance - x;
+    setBalance(y);
+   }
+
+   //Deposit method created to add the value deposited to the account balance
+   public void deposit(double x){
+    double y = balance + x;
+    setBalance(y);
+   }
+
+}
+
+
+/*This Program will create an object of the class Account with predefined values given by the task and will illustrate
+* the use of the withdraw and deposit method, displaying the account balance, date of creation and monthly rate of the account object.
+ */
+
+ //Rounding Mode and Decimal Format imported to format the monthly interest rate in two decimal values and rounded up.
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
+
+public class Main {
+    public static void main(String[] args){
+        
+        //DecimalFormat object and Rounding mode created
+        DecimalFormat df = new DecimalFormat("###.##"); 
+        df.setRoundingMode(RoundingMode.CEILING);
+
+        //initial values of id and balance set with constructor, as per task requirements.
+        Account myAccount = new Account(1122, 20000);
+
+        //Annual Interest rate set to 4.5 using set access modifier
+        myAccount.setAnnualInterestRate(4.5);
+     
+
+        //Welcome message printed to display initial balance and ID number
+        System.out.println("Welcome! Your current balance for the account number "+ myAccount.getId() + " is: £"+myAccount.getBalance());
+
+        //Withdraw and Deposit method of the Accout class are called
+        myAccount.withdraw(2500);
+        System.out.println("2500 withdrawn from account.\nCuurent balance: "+myAccount.getBalance());
+        myAccount.deposit(3000);
+        System.out.println("3000 deposited into account.\nCurrent balance: "+myAccount.getBalance());
+       
+        //Print out statements to display the monthly interest on the current balance and the date the account was created, calling the respectivbe accessor methods.
+        System.out.println("Monthly interest rate on balance of £"+ myAccount.getBalance()+ " is: £"+ df.format(myAccount.getMonthlyInterestRate()) + 
+        ". This is calculated on a monthly interest rate of "+ (myAccount.getAnnualInterestRate()/12)+"%");
+        System.out.println("Date account was created: "+ myAccount.getDateCreated());
+
+    }    
+}
