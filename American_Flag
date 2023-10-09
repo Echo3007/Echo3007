@@ -1,0 +1,38 @@
+# American Flag Code. Programming language: Java
+*/
+/*This Program will output a US flag, coloured using ANSI Colors for Java.
+ Different types of variables and for loops will be used to achieve the desired output result.
+The codes for the ANSI colours have been taken from the following website:
+https://www.w3schools.blog/ansi-colors-java
+ */
+
+
+public class AmericanFlag {
+    public static void main(String[] args){
+        //Variables for each colour initiated and associated with the ANSI Colour code
+        String blue = "\033[44m"; //blue colour
+        String red = "\033[41m"; //red colour
+        String white = "\u001B[47m"; //white colour
+        String reset = "\033[0m"; //reset string to reset the colour and ensure all the colours displayed in subsequential print statement are output
+       
+        //String variables declared, representing the rows of the flag containing the star signs and the line of colour to be output
+        String line_1 = ((blue + " * ".repeat(6) +reset+ red + " ".repeat(28) + reset));
+        String line_2 = (blue + " " + " * ".repeat(5) + "  " + white + " ".repeat(28) + reset);
+
+        //for loop will output the two lines for a total of 3 times
+        for(int i = 0; i<3; i++){        
+            System.out.println(line_1);
+            System.out.println(line_2);
+        }
+        
+        System.out.println(line_1); // when for loop is exited, the last line containing 6 stars will be printed out
+        
+        //final for loop to output the last 6 rows of the flag
+        for(int x = 0; x<3; x++){     
+            System.out.println(white + " ".repeat(46) + reset);
+            System.out.println(red + " ".repeat(46) + reset);
+        }       
+    }
+}
+
+
