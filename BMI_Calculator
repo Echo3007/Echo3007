@@ -1,0 +1,84 @@
+/*This Program will take user input for weight and height and calculate
+ * Body Mass Index (BMI). Depending on the BMI value, it will display
+ * different outputs for underweight, healthy, overweight and obese.
+ */
+
+import java.text.DecimalFormat; //Decimal Format Class imported to round to 2 decimal numbers the BMI result
+import java.util.Scanner;  //Scanner Class imported to read user input
+
+public class BMICalculator {
+    public static void main(String[] args) {
+        Scanner user_input = new Scanner(System.in);
+        boolean cont = true; //boolean variable to be used in switch statement to exit while loop
+
+        while(cont){ //while loop to iterate until the variable cont becomes false
+            System.out.println("Welcome to our Body Mass Calculator! \nPlease enter your age: ");
+            int age = user_input.nextInt();
+            if(age <= 19){  //BMI cannot be calculated by standard formula if user is under 19. NHS website link will be printed out with below message.
+                System.out.println("Young People's BMI (0 - 19 years of age) takes into consideration their gender and age to be calculated."+
+                "\nPlease use the NHS's website to calculate children's BMI: https://www.nhs.uk/live-well/healthy-weight/bmi-calculator/");
+            }
+            else{
+
+                System.out.println("Enter your weight in kg: ");
+                float weight = user_input.nextFloat(); //variable of type float created, it is assigned the value of the user input for the weight
+                    
+                System.out.println("Please enter your height in meters. E.g. 1.60m: "); 
+                float height = user_input.nextFloat(); //variable of type float created, it is assigned the value of the user input for the height
+    
+
+            
+                System.out.println("Are you:"+ "\n" + "- Male (M): "+"\n"+"- Female (F): "+ "\n- Non Binary (NB)" + "\n- Prefer not to say (X): ");
+                String gender = user_input.next(); //user input to collect gender
+
+                /*If statements to evaluate gender input and either proceed to call the bmi method or, if the condition is false, enter else block.
+                * toUpperCase method will convert in uppercase the user input.*/
+                
+                if(gender.toUpperCase().equals("F")|| gender.toUpperCase().equals("M")  || gender.toUpperCase().equals("X") || gender.toUpperCase().equals("NB")){
+                    bmi(weight, height);
+                    System.out.println("Would you like to calculate another BMI? Please enter \n - Y to calculate a new BMI \n - N to exit");
+                    String answer = user_input.next();
+                    switch(answer.toUpperCase()){
+                        case "Y":
+                        break; //exits switch and while loop restarts
+                        case "N":
+                        user_input.close();
+                        cont = false; //boolean variable becomes false, so while loop is exited once the switch is exited.
+                        break;
+                    }
+                    
+                }
+                // if user enters invalid selection in the gender, else statement becomes true and while loop restarts
+                else{
+                    System.out.println("Please enter a valid selection.");
+                   
+                }   
+            }
+        }     
+    }
+//method created to calculate bmi. Takes two arguments of float type and proceeds to calculate the bmi. Conditional statements will output print statement depending on bmi result.
+    public static void bmi(float x, float y){
+        float bmi = (x/(y*y));
+        DecimalFormat df = new DecimalFormat("#.0"); //new object of Decimal Format class to format bmi to 1 decimal place
+       
+        if(bmi<18.5){
+            System.out.println("Your Body Mass Index is: "+ df.format(bmi) +". You are underweight.");
+                
+        }
+        else if(bmi>=18.5 & bmi<= 25.0){
+            System.out.println("Your Body Index Mass is: "+ df.format(bmi) + ". You are healthy.");
+            
+        }
+        else if(bmi>25.0 & bmi<=30.0){
+            System.out.println("Your Body Mass Index is: "+ df.format(bmi) +". You are overweight.");
+            
+        }
+        else{
+            System.out.println("Your Body Mass Index is: "+ df.format(bmi) +". You are obese.");
+            
+        }
+        
+    }  
+
+}
+
