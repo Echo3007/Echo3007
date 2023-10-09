@@ -1,0 +1,127 @@
+/*This program will output a list of products and their prices, allowing the user
+ * to select the desired product and the amount.
+ * The program will then ask the user to continue shopping, allowing to select more products or
+ * to quit the shop. When the quit option will be selected, the user will be able to see the total amount
+ * of the basket and and its breakdown displaying for each item the total amount selected and total spent per item.
+ */
+
+
+import java.util.HashMap; //imports the Hashmap class
+import java.util.Scanner;  //import Scanner class to get user inputs
+import java.text.DecimalFormat; //decimal format class imported to round to two decimal numbers the total of the basket to be displayed at the end to the user.
+
+public class Online_Store{
+    public static void main(String[] args){
+        System.out.println("Welcome to Games Corner!");
+        //HashMaps created for products and menu, this will allow to assign a key and a value associated to that key, the latter will be consistent between the two HashMaps.
+        HashMap<Integer, Float> prices = new HashMap<Integer, Float>();   
+        HashMap<Integer, String> menu = new HashMap<Integer, String>();
+       
+        /*HashMap to store the total per item selected, the keys of the products will be equal to the key
+        * they have in the other HashMaps.
+        */
+        HashMap<Integer, Float> basket_breakdown = new HashMap<Integer,Float>();
+
+        /*put method to add key and 
+        * values to the prices and menu HashMap */
+        prices.put(1, 349.99F);  
+        prices.put(2, 599.99F);  
+        prices.put(3, 60.00F);
+        prices.put(4, 34.86F);
+        prices.put(5, 45.78F);
+        
+        
+        menu.put(1, "Playstation 4: ");                                                            
+        menu.put(2, "Playstation 5: ");     
+        menu.put(3, "God of War: ");
+        menu.put(4, "Assassin's Creed - Remastered Edition: ");
+        menu.put(5, "PS Plus: ");
+        
+        
+        float basket = 0.0F; //float variable to collect the total spent by the user
+        DecimalFormat df = new DecimalFormat("#.00"); // decimal format type object is created, this will be used later on sum_basket variable to format it to 2 decimal numbers.
+        Scanner input = new Scanner(System.in);   //user input to get the selected product
+    
+        boolean online = true;   //boolean variable created with true value for while loop. This variable will also be used for switch statement later on to exit the loop.
+        
+        //while loop to print out menu and allow user to iterate through the shop until they decide to exit
+        while(online){           
+            for(int i: menu.keySet()){     //enhanced for loop to iterate throught the products options and display them
+                System.out.println(i + " - " + menu.get(i)+" £"+prices.get(i));
+            }      
+            
+            //If 0 is entered, it will prompt user to continue shopping or exit
+            System.out.println("Please enter the number of the product you would like to purchase or press 0 to exit: "); 
+            int product_input = input.nextInt();
+            
+            //in case user enters a number not matching any of the products,while loop restarts to allow right selection
+            if(product_input > menu.size()){    
+                System.out.println("Select a valid product.");  
+                continue;
+            } 
+            
+            System.out.println("Please enter amount you would like to purchase: ");     
+            int amount_input = input.nextInt();     //input to get amount user would like to use
+
+            float total = 0.0F; //float variable to be assigned the amount selected by user multiplied to the price of the item selected
+        
+            //enhanced for loop to iterate trough products keys. If the user selection matches one of the keys,it calculates total of amount selected and price of product.
+            for(int x: prices.keySet()){    
+                if(x == product_input){ //if statement to check if x matches the product_input entered by the user
+                    total = amount_input * prices.get(x);   //amount entered by user is multiplied to the correcpondent price value, where the key is matching the user's product selection
+                    basket = basket + total;     //the total for the product is added to the basket
+                    
+                    /*If the item has been already selected previously by the user, then new total spent for that item selected is calculated
+                    * and added to the basket_breakdown HashMap. 
+                    */
+                    if(basket_breakdown.containsKey(x)){
+                        basket_breakdown.put(x, (basket_breakdown.get(x)+total)); //the new total for the product is added to the HashMap to the respective key represented by x
+                        
+                    }
+                    
+                    else{
+                    basket_breakdown.put(x,total); //If item is selected for the first time, then it's added to the basket_breakdown 
+                    }
+                }
+            }
+ 
+            System.out.println("Press Q to quit or Y to continue shopping!: "); 
+            String user_input = input.next(); // user input to continue shopping or exit.
+            
+            switch(user_input){  //switch statement to evaluate user input and either continue shopping or exit and get basket total
+                case "Q":
+                case "q":
+                System.out.println("* ".repeat(20));
+                System.out.println("Thank you for shopping with us! \nThe total is: £" + df.format(basket));
+                System.out.println();
+                System.out.println("***** Basket breakdown *****\n ");
+                
+                /*An enhanced for loop that iterates through the basket_breakdown HashMap, it will be used to retrieve the elements from the 3 HashMaps 
+                *to display the breakdown.*/
+                for(int x:basket_breakdown.keySet()){
+
+                    /* Explicit casting to declare the int variable and calculate the total amount per item selected by the user, to be displayed in the basket breakdown.
+                     * Total spent per item retrieved from the basket_breakdown HashMap is divided with the individual price of the product from the prices HashMap,
+                     * resulting in the amount selected per item.*/
+                    int quantity_selected = (int) ((basket_breakdown.get(x))/(prices.get(x))); 
+
+                    //Print statement will output the amount selected per product and the total per product spent
+                    System.out.println(menu.get(x)+"£"+prices.get(x)+"\n- Quantity selected: "+quantity_selected +" \nTotal for this product is: £"+basket_breakdown.get(x));
+                    System.out.println();
+
+                }
+
+                online = false;      // var online becomes false, therefore while loop stops once switch statement is exited.
+                input.close();  // closes Scanner object     
+                break;
+                case "Y":  //if input equals y or Y, exits switch statement and while loop restarts, so more items can be selected.
+                case "y":
+                break;
+                default:
+                System.out.println("Invalid selection. Please press Q to quit or Y to continue shopping!: ");
+                user_input = input.next();  //user input taken again to decide if continue shopping or exit.
+                     
+            }   
+         }    
+     }
+ }
